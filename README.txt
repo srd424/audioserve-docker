@@ -12,4 +12,4 @@ e.g.:
  
  OR
  
-  docker pull ghcr.io/srd424/audioserve-docker:trunk (not built automatically, only when I remember to push the button!)
+ docker pull ghcr.io/srd424/audioserve-docker:trunk (trunk not built automatically, only when I remember to push the button!)
