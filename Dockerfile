@@ -1,5 +1,6 @@
 FROM ubuntu:jammy AS buildenv
 ARG apt_proxy
+ARG tag
 RUN { [ -n "$apt_proxy" ] && echo "Acquire::http::proxy \"$apt_proxy\";" >/etc/apt/apt.conf.d/02proxy; } || true
 COPY qemu-aarch64-static /usr/bin
 RUN apt-get update && apt-get install -y --no-install-recommends eatmydata
@@ -7,7 +8,7 @@ RUN eatmydata apt-get install -y --no-install-recommends \
 	libavformat58 libavcodec58 libavutil56 curl wget jq unzip \
 	ca-certificates ffmpeg openssl
 RUN latest=$(curl -s "https://api.github.com/repos/srd424/audioserve-builder/releases/latest" | \
-		 jq -r .tag_name) && \
+		 jq -r ".[]|select(.tag_name|startswith(\"${tag}\")).tag_name" )
 	curl -O -L https://github.com/srd424/audioserve-builder/releases/download/$latest/audioserve_aarch64.zip && \
 	unzip audioserve_aarch64.zip && \
 	mv /result /audioserve

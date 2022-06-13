@@ -2,6 +2,12 @@ name: build docker image
 
 on:
   workflow_dispatch:
+    inputs:
+      tag:
+        description: 'build tag prefix to build into docker image'
+        required: true
+        default: 'trunk'
+        type: string
   
 env:
   REGISTRY: ghcr.io
@@ -30,7 +36,11 @@ jobs:
     - name: Build and Publish on docker hub
       run: |
         docker buildx build --push \
-          --tag ${{ env.REGISTRY }}/${{ github.repository }}:latest \
+          --build-arg tag=${{ inputs.tag }} \
+          --tag ${{ env.REGISTRY }}/${{ github.repository }}:${{ inputs.tag }}\
           --platform linux/arm64 . 
 #    - name: Publish image
 #      run: docker push ${{ env.REGISTRY }}/${{ github.repository }}
+
+
+# vim: set ts=2 et:
