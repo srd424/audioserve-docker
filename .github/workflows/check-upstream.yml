@@ -31,7 +31,7 @@ jobs:
           
   build-binary:
     needs: get-version
-    uses: ./.github/workflows/build-docker.yaml
+    uses: ./.github/workflows/build-docker.yml
     if: needs.get-version.outputs.modified == 'true'
     with:
       tag: ${{ needs.get-version.outputs.ref }}
