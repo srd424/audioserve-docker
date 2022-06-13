@@ -1,0 +1,47 @@
+name: Get latest upstream version
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 6 * * *'
+    
+jobs:
+  get-version:
+    runs-on: ubuntu-latest
+    outputs:
+      ref: ${{ steps.getrel.outputs.ref }}
+      modified: ${{ steps.git-check.outputs.modified }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Fetch release version
+        id: getrel
+        run: |
+          ref=$(curl -sL https://api.github.com/repos/izderadicka/audioserve/releases/latest | 
+          jq -r ".tag_name") && echo $ref > upstream-latest.txt && 
+          echo "::set-output name=ref::$ref"
+      - name: Check for modified files
+        id: git-check
+        run: echo ::set-output name=modified::$([ -z "`git status --porcelain`" ] && echo "false" || echo "true")
+      - name: Commit latest release version
+        if: steps.git-check.outputs.modified == 'true'
+        run: |
+          git config --global user.name 'A Bot'
+          git config --global user.email 'your-email@users.noreply.github.com'
+          git commit -am "New upstream version"
+          git push
+          
+  build-binary:
+    needs: get-version
+    uses: ./.github/workflows/build-docker.yaml
+    if: needs.get-version.outputs.modified == 'true'
+    with:
+      tag: ${{ needs.get-version.outputs.ref }}
+  
+#  build-docker:
+#    needs: [get-version, build-binary]
+#    uses: srd424/audioserve-docker/.github/workflows/build-docker.yml@master
+#    if: needs.get-version.outputs.modified == 'true'
+#    with:
+#      tag: ${{ needs.get-version.outputs.ref }}
+
+# vim: set ts=2 et:
+
