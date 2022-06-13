@@ -8,6 +8,13 @@ on:
         required: true
         default: 'trunk'
         type: string
+  workflow_call:
+    inputs:
+      tag:
+        description: 'build tag prefix to build into docker image'
+        required: true
+        default: 'trunk'
+        type: string
   
 env:
   REGISTRY: ghcr.io
