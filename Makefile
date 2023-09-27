@@ -9,9 +9,9 @@ include buildopts/$(OPTSFILE).mk
 	time nice -n +10 ionice -c 2 -n 7 buildah bud \
 		$(OPTS) \
 		--build-arg tag=trunk \
+		-v $$PWD/client-out:/client-out \
 		-f Dockerfile.client $$PWD
 	touch .client
-#		-v $$PWD/client-out:/client-out \
 
 trunk: client Dockerfile Makefile
 	time nice -n +10 ionice -c 2 -n 7 buildah bud \
