@@ -1,4 +1,4 @@
-FROM ubuntu:jammy AS buildenv
+FROM ubuntu:jammy AS final
 ARG apt_proxy
 ARG tag
 RUN { [ -n "$apt_proxy" ] && echo "Acquire::http::proxy \"$apt_proxy\";" >/etc/apt/apt.conf.d/02proxy; } || true
@@ -19,28 +19,10 @@ RUN mkdir /ssl &&\
         -subj "/C=CZ/ST=Prague/L=Prague/O=Ivan/CN=audioserve" &&\
     openssl pkcs12 -inkey key.pem -in certificate.pem -export  -passout pass:mypass -out audioserve.p12 
 
+COPY --from=audioserve-client /audioserve_client/dist /audioserve/client/dist
+
 WORKDIR /audioserve
 EXPOSE 3000
 ENTRYPOINT [ "./audioserve" ]
 
-#COPY sources.list /etc/apt/sources.list
-#RUN dpkg --add-architecture arm64 && \
-#        apt-get update || true
-#RUN apt-get install -y --no-install-recommends eatmydata
-#RUN eatmydata apt-get install -y --no-install-recommends \
-#                git ca-certificates \
-#                cargo \
-#                libstd-rust-dev:arm64 \
-#                gcc-aarch64-linux-gnu \
-#                pkg-config \
-#                libc6-dev-arm64-cross \
-#                libssl-dev \
-#                libssl-dev:arm64 \
-#                libavformat-dev:arm64 \
-#		npm
-#RUN rm -f /var/cache/apt/archives/*.deb
-#COPY cargo-config /cargo-config
-#COPY build.sh /
-#RUN chmod a+x /build.sh
-#CMD /build.sh
-#
+
