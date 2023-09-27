@@ -10,6 +10,6 @@ RUN git clone https://github.com/izderadicka/audioserve-web.git /audioserve_clie
     npm install && \
     npm run build && \
     npm run build-sw && \
-    mv public dist
+    mv public /client-out/dist
 
 
