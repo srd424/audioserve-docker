@@ -1,3 +1,18 @@
+FROM ubuntu:lunar AS audioserve-client
+ARG apt_proxy
+ARG tag
+RUN { [ -n "$apt_proxy" ] && echo "Acquire::http::proxy \"$apt_proxy\";" >/etc/apt/apt.conf.d/02proxy; } || true
+RUN apt-get update && apt-get install -y --no-install-recommends eatmydata
+RUN eatmydata apt-get install -y --no-install-recommends \
+	npm git
+RUN git clone https://github.com/izderadicka/audioserve-web.git /audioserve_client && \
+    cd /audioserve_client && \
+    npm install && \
+    npm run build && \
+    npm run build-sw && \
+    mv public dist
+
+
 FROM ubuntu:jammy AS final
 ARG apt_proxy
 ARG tag
