@@ -54,7 +54,7 @@ jobs:
       run: podman push as-docker:latest ${{ env.REGISTRY }}/srd424/audioserve-docker:${{ env.BRANCH_TAG }}
 
     - name: Add version tag
-      if: ${{ startsWith(inputs.tag,"v") }}
+      if: ${{ startsWith(inputs.tag,'v') }}
       run: podman push as-docker:latest ${{ env.REGISTRY }}/srd424/audioserve-docker:${{ inputs.tag }}
   
 
