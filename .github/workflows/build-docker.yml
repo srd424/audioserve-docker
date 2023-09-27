@@ -19,7 +19,7 @@ on:
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
-  IMAGE_TAG: ${{ github.ref_name == 'master' && 'latest' || github.ref_name }}
+  BRANCH_TAG: ${{ github.ref_name == 'master' && 'latest' || github.ref_name }}
   
 jobs:
   docker-build:
@@ -51,7 +51,12 @@ jobs:
         password: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Publish image
-      run: podman push as-docker:latest ${{ env.REGISTRY }}/srd424/audioserve-docker:${{ env.IMAGE_TAG }}
+      run: podman push as-docker:latest ${{ env.REGISTRY }}/srd424/audioserve-docker:${{ env.BRANCH_TAG }}
+
+    - name: Add version tag
+      if: ${{ startsWith(inputs.tag,"v") }}
+      run: podman push as-docker:latest ${{ env.REGISTRY }}/srd424/audioserve-docker:${{ inputs.tag }}
+  
 
 #    # https://github.com/docker/setup-buildx-action
 #    - name: Set up Docker Buildx
