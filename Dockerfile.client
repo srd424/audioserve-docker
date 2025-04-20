@@ -1,4 +1,4 @@
-FROM ubuntu:lunar AS client
+FROM ubuntu:noble AS client
 ARG apt_proxy
 ARG tag
 RUN { [ -n "$apt_proxy" ] && echo "Acquire::http::proxy \"$apt_proxy\";" >/etc/apt/apt.conf.d/02proxy; } || true
