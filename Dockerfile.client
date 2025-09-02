@@ -8,8 +8,7 @@ RUN eatmydata apt-get install -y --no-install-recommends \
 RUN git clone https://github.com/izderadicka/audioserve-web.git /audioserve_client && \
     cd /audioserve_client && \
     npm install && \
-    npm run build && \
     npm run build-sw && \
-    mv public /client-out/dist
-
+    npm run build && \
+    mv dist /client-out/dist
 
