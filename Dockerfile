@@ -1,4 +1,4 @@
-FROM ubuntu:jammy AS final
+FROM debian:trixie AS final
 ARG apt_proxy
 ARG tag
 RUN { [ -n "$apt_proxy" ] && echo "Acquire::http::proxy \"$apt_proxy\";" >/etc/apt/apt.conf.d/02proxy; } || true
@@ -7,7 +7,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends eatmydata
 RUN eatmydata apt-get install -y --no-install-recommends \
 	curl wget jq unzip ca-certificates
 RUN eatmydata apt-get install -y --no-install-recommends \
-	libavformat58 libavcodec58 libavutil56 ffmpeg openssl
+	libavformat61 libavcodec61 libavutil59 ffmpeg openssl
 RUN latest=$(curl -s "https://api.github.com/repos/srd424/audioserve-builder/releases" | \
 		 jq -r "[.[]|select(.tag_name|startswith(\"$tag\"))][0].tag_name" ) && \
 	echo "fetching tag $latest" && \
