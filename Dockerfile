@@ -11,7 +11,7 @@ RUN eatmydata apt-get install -y --no-install-recommends \
 RUN latest=$(curl -s "https://api.github.com/repos/srd424/audioserve-build-stub/releases" | \
 		 jq -r "[.[]|select(.tag_name|startswith(\"$tag\"))][0].tag_name" ) && \
 	echo "fetching tag $latest" && \
-	curl -O -L https://github.com/srd424/audioserve-builder/releases/download/$latest/audioserve_aarch64.zip && \
+	curl -O -L https://github.com/srd424/audioserve-build-stub/releases/download/$latest/audioserve_aarch64.zip && \
 	unzip audioserve_aarch64.zip && \
 	mv /result /audioserve
 
